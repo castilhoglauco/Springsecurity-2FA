@@ -1,5 +1,7 @@
 package com.baeldung.lss.spring;
 
+import com.baeldung.lss.security.CustomAuthenticationProvider;
+import com.baeldung.lss.security.CustomWebAuthenticationDetailsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,22 +12,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
-@ComponentScan({ "org.baeldung.lss.security" })
+@ComponentScan("com.baeldung.lss.security")
 @EnableWebSecurity
 public class LssSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     public LssSecurityConfig() {
         super();
     }
 
-    //
+    @Autowired
+    private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
+
+    @Autowired
+    private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.authenticationProvider(customAuthenticationProvider);
     }
 
     @Override
@@ -38,7 +41,8 @@ public class LssSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .formLogin().
             loginPage("/login").permitAll().
-            loginProcessingUrl("/doLogin")
+            loginProcessingUrl("/doLogin").
+            authenticationDetailsSource(authenticationDetailsSource)
 
         .and()
         .logout().permitAll().logoutUrl("/logout")

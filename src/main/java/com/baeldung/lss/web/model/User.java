@@ -9,6 +9,7 @@ import java.util.Calendar;
 import com.baeldung.lss.validation.PasswordMatches;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.aerogear.security.otp.api.Base32;
 
 @Entity
 @PasswordMatches
@@ -28,7 +29,14 @@ public class User {
     @NotEmpty(message = "Password confirmation is required.")
     private String passwordConfirmation;
 
+    private String secret;
+
     private Calendar created = Calendar.getInstance();
+
+    public User() {
+        super();
+        this.secret = Base32.random();
+    }
 
     public Long getId() {
         return this.id;
@@ -70,8 +78,19 @@ public class User {
         this.passwordConfirmation = passwordConfirmation;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", email='" + email + '\'' + ", password='" + password + '\'' + ", passwordConfirmation='" + passwordConfirmation + '\'' + ", created=" + created + '}';
+        final StringBuilder builder = new StringBuilder();
+        builder.append("User [id=").append(id).append(", email=").append(email).append(", password=").append(password).append(", passwordConfirmation=").append(passwordConfirmation).append(", created=").append(created).append(", secret=").append(secret)
+                .append("]");
+        return builder.toString();
     }
 }

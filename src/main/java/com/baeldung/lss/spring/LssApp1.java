@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan("com.baeldung.lss")
+@ComponentScan({"com.baeldung.lss", "com.baeldung.lss.security"})
 @EnableJpaRepositories("com.baeldung.lss")
 @EntityScan("com.baeldung.lss.web.model")
 public class LssApp1 {
